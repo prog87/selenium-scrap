@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 import pandas as pd
+import time
 
 website = 'https://www.adamchoi.co.uk/overs/detailed'
 options = webdriver.ChromeOptions()
@@ -10,6 +12,12 @@ driver.get(website)
 
 all_matches_button = driver.find_element(By.XPATH, '//label[@analytics-event="All matches"]')
 all_matches_button.click()
+
+# Dropdown
+dropdown = Select(driver.find_element(By.ID, 'country'))
+dropdown.select_by_visible_text('Spain')
+
+time.sleep(3)
 
 matches = driver.find_elements(By.TAG_NAME, 'tr')
 
@@ -25,6 +33,7 @@ for match in matches:
     print(home)
     score.append(match.find_element(By.XPATH, './td[3]').text)
     away_team.append(match.find_element(By.XPATH, './td[4]').text)
+driver.quit()
 
 df = pd.DataFrame({'date': date, 'home_team': home_team, 'score': score, 'away_team': away_team})
 df.to_csv('football_data.csv', index=False)

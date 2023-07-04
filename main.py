@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
 
 website = 'https://www.adamchoi.co.uk/overs/detailed'
 options = webdriver.ChromeOptions()
@@ -26,5 +25,9 @@ for match in matches:
     print(home)
     score.append(match.find_element(By.XPATH, './td[3]').text)
     away_team.append(match.find_element(By.XPATH, './td[4]').text)
+
+df = pd.DataFrame({'date': date, 'home_team': home_team, 'score': score, 'away_team': away_team})
+df.to_csv('football_data.csv', index=False)
+print(df)
 
 
